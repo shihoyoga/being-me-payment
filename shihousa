@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Being me 料金チェッカー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FDFCE9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #A8B5A0;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-family: 'Times New Roman', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho Pro', serif;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .question-group {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #DEDFC8;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .question-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #A8B5A0;
+        }
+        
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #A8B5A0;
+        }
+        
+        .option label {
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: #DEDFC8;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            display: none;
+        }
+        
+        .price-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 15px 0;
+        }
+        
+        .price-breakdown {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .included-items {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .included-items h3 {
+            color: #A8B5A0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .included-items ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .included-items li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            border-bottom: 1px solid #f7fafc;
+        }
+        
+        .included-items li:before {
+            content: "🌿";
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+        
+        .plan-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .self-badge {
+            background: #FDFCE9;
+            color: #A8B5A0;
+        }
+        
+        .support-badge {
+            background: #DEDFC8;
+            color: #6d5d4d;
+        }
+        
+        .special-note {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .payment-button {
+            background: linear-gradient(135deg, #A8B5A0 0%, #DEDFC8 100%);
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(168, 181, 160, 0.3);
+        }
+        
+        .payment-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 181, 160, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .price-display {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Being me</h1>
+            <p>あなたの料金シュミレーションします☺️</p>
+        </div>
+        
+        <div class="content">
+            <div class="question-group">
+                <div class="question-title">
+                    🌿 プランを選択してください
+                </div>
+                <div class="question-options">
+                    <div class="option">
+                        <input type="radio" id="self" name="plan" value="self">
+                        <label for="self">
+                            <div style="font-weight: 600;">セルフプラン（49,800円）</div>
+                            <div style="font-size: 0.85rem; color: #A8B5A0; margin-top: 4px;">リピートの方向け</div>
+                        </label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="support" name="plan" value="support">
+                        <label for="support">
+                            <div style="font-weight: 600;">サポートプラン（69,800円）🌟人気</div>
+                            <div style="font-size: 0.85rem; color: #A8B5A0; margin-top: 4px;">初参加の方におすすめ - 約1万円分のドリンクと個別カウンセリング付き！</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <div class="question-title">
+                    👤 あなたの状況を教えてください
+                </div>
+                <div class="question-options">
+                    <div class="option">
+                        <input type="radio" id="general_first" name="status" value="general_first">
+                        <label for="general_first">🆕 一般の初参加（マイスター受講なし・資格なし）</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="first_with_master" name="status" value="first_with_master">
+                        <label for="first_with_master">初参加 & ファスティングマイスター受講予定</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="master_first" name="status" value="master_first">
+                        <label for="master_first">ファスティングマイスター保有 & 初参加</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="other_master_first" name="status" value="other_master_first">
+                        <label for="other_master_first">他でマイスター取得済 & 初参加</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="repeater" name="status" value="repeater">
+                        <label for="repeater">一般リピーター</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="qualified_repeater" name="status" value="qualified_repeater">
+                        <label for="qualified_repeater">資格ありリピーター</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result" id="result">
+                <div class="plan-badge" id="planBadge"></div>
+                <div class="price-display" id="priceDisplay"></div>
+                <div class="price-breakdown" id="priceBreakdown"></div>
+                <div class="included-items" id="includedItems"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const paymentUrls = {
+            general_first: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=zI4RrX',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=H6Xd5Y'
+            },
+            first_with_master: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=t6Nn89',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=X3JIii'
+            },
+            master_first: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=t6Nn89',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=X3JIii'
+            },
+            other_master_first: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=t6Nn89',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=X3JIii'
+            },
+            repeater: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=fEqjyL',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=hx1r2p'
+            },
+            qualified_repeater: {
+                self: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=Q1ppCX',
+                support: 'https://s.lmes.jp/landing-qr/2007280677-53wGBALX?uLand=pN8Myg'
+            }
+        };
+
+        const plans = {
+            self: {
+                name: 'セルフプラン',
+                subtitle: 'リピートの方向け',
+                price: 49800,
+                taxIncluded: 54780,
+                badge: 'self-badge',
+                items: [
+                    '最高級ファスティングドリンク「KALA酵素」付き',
+                    'ZOOMレッスン8時間 + Being me Journey Book',
+                    '4つのジャーナリングワークで普段蓋をしている「本当の想い」と向き合える',
+                    '14日間いつでもLINE質問OK',
+                    'Fasting期間中は毎朝のサポートメッセージお届け',
+                    '3時間のFasting徹底解説動画でしっかり学べる',
+                    'BOOKはデータでのお渡し（ご自身で印刷して使っていただけます）'
+                ]
+            },
+            support: {
+                name: 'サポートプラン',
+                subtitle: '初参加の方におすすめ - 約1万円分のドリンクと個別カウンセリング付き！',
+                price: 69800,
+                taxIncluded: 76780,
+                badge: 'support-badge',
+                items: [
+                    '🎁 追加MANA酵素（¥9,155相当付き）プレゼント！断食前後のサポートに◎',
+                    'セルフプランの全て +',
+                    'Being me パーソナルセッション（約30分×2回）- ファスティング前後の個別カウンセリングで、不安をワクワクに、迷いを確信に',
+                    '世界で一つだけのプラン「自分らしく生きるパーソナルプランシート」- あなたの悩み、体質、目標にカスタマイズしてお渡し！',
+                    'Being me Journey Book とFASTING BOOK を冊子でお届け - プログラム終了後も、人生の指針として いつでも見返せる！',
+                    'ファスティング安心5点セット付き'
+                ]
+            }
+        };
+
+        const discounts = {
+            general_first: { discount: 0, name: '一般の初参加（通常価格）' },
+            first_with_master: { discount: 20000, name: '初参加&マイスター受講割引' },
+            master_first: { discount: 20000, name: 'マイスター初参加割引' },
+            other_master_first: { discount: 10000, name: '他マイスター初参加割引' },
+            repeater: { discount: 10000, name: 'リピーター割引' },
+            qualified_repeater: { 
+                self: { fixedPrice: 10000, name: '資格ありリピーター特別価格' },
+                support: { fixedPrice: 20000, name: '資格ありリピーター特別価格' }
+            }
+        };
+
+        function calculatePrice() {
+            const planInput = document.querySelector('input[name="plan"]:checked');
+            const statusInput = document.querySelector('input[name="status"]:checked');
+            
+            if (!planInput || !statusInput) return;
+
+            const planType = planInput.value;
+            const statusType = statusInput.value;
+            const plan = plans[planType];
+            
+            let finalPrice, taxIncludedPrice, breakdown = '';
+            
+            if (statusType === 'qualified_repeater') {
+                const specialPrice = discounts[statusType][planType];
+                finalPrice = specialPrice.fixedPrice;
+                taxIncludedPrice = Math.floor(finalPrice * 1.1);
+                breakdown = `
+                    <strong>${specialPrice.name}</strong><br>
+                    ${finalPrice.toLocaleString()}円 + ドリンク代<br>
+                    <small style="color: #666;">※税込 ${taxIncludedPrice.toLocaleString()}円 + ドリンク代</small><br>
+                    <div class="special-note">
+                        <strong>⚠️ 特別価格適用</strong><br>
+                        資格をお持ちのリピーター様限定の特別価格です
+                    </div>
+                `;
+            } else {
+                const discount = discounts[statusType];
+                finalPrice = plan.price - discount.discount;
+                taxIncludedPrice = Math.floor(finalPrice * 1.1);
+                
+                breakdown = `
+                    <strong>料金計算</strong><br>
+                    基本料金: ${plan.price.toLocaleString()}円<br>
+                    ${discount.name}: -${discount.discount.toLocaleString()}円<br>
+                    <hr style="margin: 10px 0;">
+                    <strong>合計: ${finalPrice.toLocaleString()}円（税込 ${taxIncludedPrice.toLocaleString()}円）</strong>
+                `;
+            }
+            
+            // 結果表示
+            document.getElementById('planBadge').textContent = plan.name;
+            document.getElementById('planBadge').className = `plan-badge ${plan.badge}`;
+            
+            if (statusType === 'qualified_repeater') {
+                document.getElementById('priceDisplay').innerHTML = `${finalPrice.toLocaleString()}円<br><small>+ ドリンク代</small>`;
+            } else {
+                document.getElementById('priceDisplay').textContent = `${taxIncludedPrice.toLocaleString()}円`;
+            }
+            
+            document.getElementById('priceBreakdown').innerHTML = breakdown;
+            
+            const itemsHtml = plan.items.map(item => `<li>${item}</li>`).join('');
+            document.getElementById('includedItems').innerHTML = `
+                <h3>${plan.name} に含まれるもの</h3>
+                <ul>${itemsHtml}</ul>
+            `;
+            
+            // 支払いボタンを追加
+            const paymentUrl = paymentUrls[statusType][planType];
+            if (paymentUrl) {
+                document.getElementById('includedItems').innerHTML += `
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="${paymentUrl}" target="_blank" class="payment-button">
+                            💳 ここから支払う
+                        </a>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // イベントリスナー追加
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.addEventListener('change', calculatePrice);
+        });
+    </script>
+</body>
+</html>
