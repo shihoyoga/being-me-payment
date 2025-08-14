@@ -35,15 +35,19 @@
         }
         
         .header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 0.6em;
             font-weight: 700;
             font-family: 'Times New Roman', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho Pro', serif;
         }
         
         .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 1em;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .content {
@@ -173,7 +177,7 @@
             content: "🌿";
             position: absolute;
             left: 0;
-            top: 8px;
+            top: 12px;
         }
         
         .plan-badge {
@@ -204,8 +208,8 @@
         }
         
         .payment-button {
-            background: linear-gradient(135deg, #A8B5A0 0%, #DEDFC8 100%);
-            color: #333;
+            background: #A8B5A0;
+            color: white;
             border: none;
             padding: 15px 30px;
             border-radius: 25px;
@@ -250,14 +254,8 @@
 <body>
     <div class="container">
         <div class="header">
-         <h1 style="font-size: 2.5rem; margin-bottom: 0.6em; color: #ffffff; font-weight: bold;">
-  Being me
-</h1>
-
-<p style="font-size: 0.9rem; line-height: 1.8; margin-bottom: 1em; color: #ffffff; max-width: 700px;">
-  プラン選択とお支払いのページです。お支払い完了で本申込完了となります。<strong>8/18〆切</strong>
-</p>
-
+            <h1>Being me</h1>
+            <p>プラン選択とお支払いのページです。お支払い完了で本申込完了となります。<strong>8/18〆切</strong></p>
         </div>
         
         <div class="content">
@@ -269,14 +267,14 @@
                     <div class="option">
                         <input type="radio" id="self" name="plan" value="self">
                         <label for="self">
-                            <div style="font-weight: 600;">セルフプラン（49,800円）</div>
+                            <div style="font-weight: 600;">セルフプラン（49,800円 税抜）</div>
                             <div style="font-size: 0.85rem; color: #A8B5A0; margin-top: 4px;">リピートの方向け</div>
                         </label>
                     </div>
                     <div class="option">
                         <input type="radio" id="support" name="plan" value="support">
                         <label for="support">
-                            <div style="font-weight: 600;">サポートプラン（69,800円）🌟人気</div>
+                            <div style="font-weight: 600;">サポートプラン（69,800円 税抜）🌟人気</div>
                             <div style="font-size: 0.85rem; color: #A8B5A0; margin-top: 4px;">初参加の方におすすめ - 約1万円分のドリンクと個別カウンセリング付き！</div>
                         </label>
                     </div>
@@ -488,6 +486,13 @@
             
             document.getElementById('priceBreakdown').innerHTML = breakdown;
             
+            // 3日間断食の説明を追加
+            document.getElementById('priceBreakdown').innerHTML += `
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem; color: #666;">
+                    こちらの金額は3日間断食分です。5日間断食もおすすめ◎ → 専用SHOPからドリンク追加購入で延長可能
+                </div>
+            `;
+            
             const itemsHtml = plan.items.map(item => {
                 if (typeof item === 'string') {
                     return `<li><div class="main-item">${item}</div></li>`;
@@ -498,13 +503,11 @@
                     </li>`;
                 }
             }).join('');
+            
             document.getElementById('includedItems').innerHTML = `
                 <h3>${plan.name} に含まれるもの</h3>
                 <ul>${itemsHtml}</ul>
             `;
-            <p style="font-size: 0.9rem; line-height: 1.8; color: #ffffff; max-width: 700px;">
-  こちらの金額は3日間断食分です。5日間断食もおすすめ◎ → 専用SHOPからドリンク追加購入で延長可能
-</p>
 
             // 支払いボタンを追加
             const paymentUrl = paymentUrls[statusType][planType];
@@ -516,8 +519,9 @@
                         </a>
                         <div style="font-size: 0.8rem; color: #8b7355; margin-top: 15px; line-height: 1.5;">
                             ☑︎ うさしほ専用LINEに飛びます<br>
-　　　　　　　　　　　　　　　　　（ページ遷移に数秒かかります。そのままお待ちください）<br>
+                            （ページ遷移に数秒かかります。そのままお待ちください）<br>
                             ☑︎ お申込など今後のご案内も専用LINEでお送りします💌
+                        </div>
                     </div>
                 `;
             }
