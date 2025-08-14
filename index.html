@@ -254,12 +254,8 @@
   Being me
 </h1>
 
-<p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1em; color: #ffffff; max-width: 700px;">
+<p style="font-size: 0.9rem; line-height: 1.8; margin-bottom: 1em; color: #ffffff; max-width: 700px;">
   プラン選択とお支払いのページです。お支払い完了で本申込完了となります。<strong>8/18〆切</strong>
-</p>
-
-<p style="font-size: 1.1rem; line-height: 1.8; color: #ffffff; max-width: 700px;">
-  こちらの金額は3日間断食分のドリンク付き！5日間断食もおすすめです◎ → 専用SHOPからドリンク追加購入で延長可能◎
 </p>
 
         </div>
@@ -506,7 +502,10 @@
                 <h3>${plan.name} に含まれるもの</h3>
                 <ul>${itemsHtml}</ul>
             `;
-            
+            <p style="font-size: 0.9rem; line-height: 1.8; color: #ffffff; max-width: 700px;">
+  こちらの金額は3日間断食分です。5日間断食もおすすめ◎ → 専用SHOPからドリンク追加購入で延長可能
+</p>
+
             // 支払いボタンを追加
             const paymentUrl = paymentUrls[statusType][planType];
             if (paymentUrl) {
