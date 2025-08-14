@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Being me コース選択、お支払い </title>
+    <title>Being me 料金チェッカー</title>
     <style>
         * {
             margin: 0;
@@ -150,10 +149,24 @@
         }
         
         .included-items li {
-            padding: 8px 0;
+            padding: 12px 0;
             padding-left: 25px;
             position: relative;
             border-bottom: 1px solid #f7fafc;
+            line-height: 1.6;
+        }
+        
+        .included-items .main-item {
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .included-items .sub-item {
+            font-weight: 400;
+            color: #A8B5A0;
+            font-size: 0.85rem;
+            margin-top: 4px;
         }
         
         .included-items li:before {
@@ -341,13 +354,34 @@
                 taxIncluded: 54780,
                 badge: 'self-badge',
                 items: [
-                    '最高級ファスティングドリンク「KALA酵素」付き',
-                    'ZOOMレッスン8時間 + Being me Journey Book',
-                    '4つのジャーナリングワークで普段蓋をしている「本当の想い」と向き合える',
-                    '14日間いつでもLINE質問OK',
-                    'Fasting期間中は毎朝のサポートメッセージお届け',
-                    '3時間のFasting徹底解説動画でしっかり学べる',
-                    'BOOKはデータでのお渡し（ご自身で印刷して使っていただけます）'
+                    {
+                        main: '最高級ファスティングドリンク「KALA酵素」付き',
+                        sub: ''
+                    },
+                    {
+                        main: 'ZOOMレッスン8時間 + Being me Journey Book',
+                        sub: ''
+                    },
+                    {
+                        main: '4つのジャーナリングワーク',
+                        sub: '普段蓋をしている「本当の想い」と向き合える'
+                    },
+                    {
+                        main: '14日間いつでもLINE質問OK',
+                        sub: ''
+                    },
+                    {
+                        main: 'Fasting期間中は毎朝のサポートメッセージお届け',
+                        sub: ''
+                    },
+                    {
+                        main: '3時間のFasting徹底解説動画',
+                        sub: 'しっかり学べる'
+                    },
+                    {
+                        main: 'BOOKはデータでのお渡し',
+                        sub: 'ご自身で印刷して使っていただけます'
+                    }
                 ]
             },
             support: {
@@ -357,12 +391,30 @@
                 taxIncluded: 76780,
                 badge: 'support-badge',
                 items: [
-                    '🎁 追加MANA酵素（¥9,155相当付き）プレゼント！断食前後のサポートに◎',
-                    'セルフプランの全て +',
-                    'Being me パーソナルセッション（約30分×2回）- ファスティング前後の個別カウンセリングで、不安をワクワクに、迷いを確信に',
-                    '世界で一つだけのプラン「自分らしく生きるパーソナルプランシート」- あなたの悩み、体質、目標にカスタマイズしてお渡し！',
-                    'Being me Journey Book とFASTING BOOK を冊子でお届け - プログラム終了後も、人生の指針として いつでも見返せる！',
-                    'ファスティング安心5点セット付き'
+                    {
+                        main: '🎁 追加MANA酵素（¥9,155相当付き）プレゼント！',
+                        sub: '断食前後のサポートに◎'
+                    },
+                    {
+                        main: 'セルフプランの全て +',
+                        sub: ''
+                    },
+                    {
+                        main: 'Being me パーソナルセッション（約30分×2回）',
+                        sub: 'ファスティング前後の個別カウンセリングで、不安をワクワクに、迷いを確信に'
+                    },
+                    {
+                        main: '世界で一つだけのプラン「自分らしく生きるパーソナルプランシート」',
+                        sub: 'あなたの悩み、体質、目標にカスタマイズしてお渡し！'
+                    },
+                    {
+                        main: 'Being me Journey Book とFASTING BOOK を冊子でお届け',
+                        sub: 'プログラム終了後も、人生の指針として いつでも見返せる！'
+                    },
+                    {
+                        main: 'ファスティング安心5点セット付き',
+                        sub: ''
+                    }
                 ]
             }
         };
@@ -400,10 +452,8 @@
                     ${finalPrice.toLocaleString()}円 + ドリンク代<br>
                     <small style="color: #666;">※税込 ${taxIncludedPrice.toLocaleString()}円 + ドリンク代</small><br>
                     <div class="special-note">
-                     <strong>⚠️ 特別価格適用</strong><br>
+                        <strong>⚠️ 特別価格適用</strong><br>
                         資格をお持ちのリピーター様限定の特別価格です
-                    <strong>⚠️ ドリンクは別途購入して下さい</strong><br>
-                        マイスター専用SHOPから購入してね🐰
                     </div>
                 `;
             } else {
@@ -432,7 +482,16 @@
             
             document.getElementById('priceBreakdown').innerHTML = breakdown;
             
-            const itemsHtml = plan.items.map(item => `<li>${item}</li>`).join('');
+            const itemsHtml = plan.items.map(item => {
+                if (typeof item === 'string') {
+                    return `<li><div class="main-item">${item}</div></li>`;
+                } else {
+                    return `<li>
+                        <div class="main-item">${item.main}</div>
+                        ${item.sub ? `<div class="sub-item">${item.sub}</div>` : ''}
+                    </li>`;
+                }
+            }).join('');
             document.getElementById('includedItems').innerHTML = `
                 <h3>${plan.name} に含まれるもの</h3>
                 <ul>${itemsHtml}</ul>
